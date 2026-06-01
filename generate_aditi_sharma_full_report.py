@@ -6,7 +6,7 @@ from typing import Any
 
 from jhora import const, utils
 from jhora.horoscope.chart import arudhas, ashtakavarga, charts, dosha, strength, yoga
-from jhora.horoscope.main import Horoscope
+from jhora.horoscope.info import Horoscope
 from jhora.horoscope.prediction import general, longevity
 from jhora.panchanga import drik
 
@@ -102,7 +102,14 @@ def build_report() -> dict[str, Any]:
     if place is None:
         raise RuntimeError(f"Built-in location lookup failed for: {PLACE_NAME}")
 
-    horo = Horoscope(place_with_country_code=PLACE_NAME, date_in=DOB, birth_time=TOB_STR)
+    horo = Horoscope(
+        place_with_country_code=place.name,
+        latitude=place.latitude,
+        longitude=place.longitude,
+        timezone_offset=place.timezone,
+        date_in=DOB,
+        birth_time=TOB_STR,
+    )
     jd = horo.julian_day
     dob_tuple = (DOB.year, DOB.month, DOB.day)
 
@@ -146,7 +153,13 @@ def build_report() -> dict[str, Any]:
     yogas_all, yogas_found, yogas_possible = yoga.get_yoga_details_for_all_charts(jd, place)
     doshas = dosha.get_dosha_details(jd, place)
     predictions_general = general.get_prediction_details(jd, place)
-    life_span_range, life_span_group = longevity.life_span_range(jd, place)
+    try:
+        life_span_group = longevity.life_span_range(jd, place)
+        life_span_map = {0: "Alpayu", 1: "Madhyayu", 2: "Poornayu"}
+        life_span_range = life_span_map.get(life_span_group, "Unknown")
+    except Exception as exc:
+        life_span_group = None
+        life_span_range = f"error: {exc}"
 
     report = {
         "input": {
