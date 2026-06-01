@@ -14823,7 +14823,7 @@ Raagu☊
   - 70
   - 59
   - 94
-- **sodhaya_pindas**:
+- **sodhya_pindas**:
   - 116
   - 127
   - 204

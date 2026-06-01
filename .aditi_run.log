@@ -1,0 +1,26 @@
+horoscope /tmp/workspace added to system path ['/tmp/workspace/Abhishek14000/PyJHora', '/tmp/workspace/Abhishek14000/PyJHora/src', '/usr/lib/python312.zip', '/usr/lib/python3.12', '/usr/lib/python3.12/lib-dynload', '/home/runner/.local/lib/python3.12/site-packages', '/usr/local/lib/python3.12/dist-packages', '/usr/lib/python3/dist-packages', '/tmp/workspace']
+/tmp added to system path ['/tmp/workspace/Abhishek14000/PyJHora', '/tmp/workspace/Abhishek14000/PyJHora/src', '/usr/lib/python312.zip', '/usr/lib/python3.12', '/usr/lib/python3.12/lib-dynload', '/home/runner/.local/lib/python3.12/site-packages', '/usr/local/lib/python3.12/dist-packages', '/usr/lib/python3/dist-packages', '/tmp/workspace', '/tmp']
+Checking world city SQLite file: /tmp/workspace/Abhishek14000/PyJHora/src/jhora/data/geonames_places_5k.db
+JHora:  JHora: [ERROR] yoga.py:<genexpr>:7696 - invalid literal for int() with base 10: 'L'
+ outer_frames:[]
+JHora: Full traceback:
+
+JHora: [0] File: yoga.py, Function: get_yoga_details, Line: 126
+
+JHora:     Code: yoga_exists = eval(eval_str)(jd,place,divisional_chart_factor)#(planet_positions) ##(h_to_p)#
+
+JHora: [1] File: yoga.py, Function: durmukha_yoga_from_jd_place, Line: 7757
+
+JHora:     Code: return _durmukha_yoga_calculation(planet_positions=pp, natural_malefics=nm, method=method, navamsa_chart=nav, gulika_house=gulika_h)
+
+JHora: [2] File: yoga.py, Function: _durmukha_yoga_calculation, Line: 7696
+
+JHora:     Code: joins_evil = any(p != '' and int(p) in _natural_malefics and int(p) != lord_of_2nd for p in planets_with_lord)
+
+JHora: [3] File: yoga.py, Function: <genexpr>, Line: 7696
+
+JHora:     Code: joins_evil = any(p != '' and int(p) in _natural_malefics and int(p) != lord_of_2nd for p in planets_with_lord)
+
+Error executing durmukha_yoga_from_jd_place for divisional_chart_factor= 4 invalid literal for int() with base 10: 'L'
+Saved /tmp/workspace/Abhishek14000/PyJHora/aditi_sharma_full_report.json
+Saved /tmp/workspace/Abhishek14000/PyJHora/aditi_sharma_full_report.md

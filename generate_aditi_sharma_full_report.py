@@ -18,6 +18,7 @@ TOB_TUPLE = (22, 10, 0)
 PLACE_NAME = "Noida, Uttar Pradesh, India"
 JSON_OUT = Path("aditi_sharma_full_report.json")
 MD_OUT = Path("aditi_sharma_full_report.md")
+LIFE_SPAN_LABELS = {0: "Alpayu", 1: "Madhyayu", 2: "Poornayu"}
 
 
 def _to_serializable(value: Any) -> Any:
@@ -64,7 +65,7 @@ def _markdown_for_value(value: Any, indent: int = 0) -> list[str]:
     return [f"{pad}- {_format_scalar(value)}"]
 
 
-def _invoke_available_dhasa_methods(horo: Horoscope, dob_tuple, tob_tuple, place) -> dict[str, Any]:
+def _invoke_available_dhasa_methods(horo: Horoscope, dob, tob, place) -> dict[str, Any]:
     results: dict[str, Any] = {}
     for method_name, method in inspect.getmembers(horo, predicate=callable):
         if not (method_name.startswith("_get_") and "dhasa" in method_name):
@@ -76,16 +77,16 @@ def _invoke_available_dhasa_methods(horo: Horoscope, dob_tuple, tob_tuple, place
             if p.name == "self":
                 continue
             if p.name == "dob":
-                kwargs["dob"] = dob_tuple
+                kwargs["dob"] = dob
             elif p.name == "tob":
-                kwargs["tob"] = tob_tuple
+                kwargs["tob"] = tob
             elif p.name == "place":
                 kwargs["place"] = place
             elif p.name == "jd":
                 kwargs["jd"] = horo.julian_day
             elif p.name == "years":
                 kwargs["years"] = 120
-            elif p.default is inspect._empty:
+            elif p.default is inspect.Parameter.empty:
                 unsupported_required.append(p.name)
         if unsupported_required:
             results[method_name] = {"skipped": f"unsupported required args: {unsupported_required}"}
@@ -155,8 +156,7 @@ def build_report() -> dict[str, Any]:
     predictions_general = general.get_prediction_details(jd, place)
     try:
         life_span_group = longevity.life_span_range(jd, place)
-        life_span_map = {0: "Alpayu", 1: "Madhyayu", 2: "Poornayu"}
-        life_span_range = life_span_map.get(life_span_group, "Unknown")
+        life_span_range = LIFE_SPAN_LABELS.get(life_span_group, "Unknown")
     except Exception as exc:
         life_span_group = None
         life_span_range = f"error: {exc}"
@@ -211,7 +211,7 @@ def build_report() -> dict[str, Any]:
             "prastara_ashtaka_varga": ashtaka_prastara,
             "raasi_pindas": ashtaka_raasi_pindas,
             "graha_pindas": ashtaka_graha_pindas,
-            "sodhaya_pindas": ashtaka_sodhya_pindas,
+            "sodhya_pindas": ashtaka_sodhya_pindas,
         },
         "shadbala": strength.shad_bala(jd, place),
         "special_lagnas": special_lagnas_by_chart,
@@ -248,7 +248,7 @@ def write_outputs(report: dict[str, Any]) -> None:
 
 
 def main() -> None:
-    utils.set_language(const._DEFAULT_LANGUAGE)
+    utils.set_language("en")
     report = build_report()
     write_outputs(report)
     print(f"Saved {JSON_OUT.resolve()}")
